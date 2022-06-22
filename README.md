@@ -1,119 +1,41 @@
-# myapp
+# FamPay Backend Assignment
 
-Fampay Backend Assignment
+Backend for an app to demonstrate the usage of YouTube API
 
-## Get Started
+# Features
 
-Get started developing...
+- Polls the Youtube API every 30 seconds to fetch latest videos based on a search query and saves them into a MongoDB database.
+- API to fetch paginated videos sorted in descending order of published datetime.
+- Partial Search API to filter through the list of videos.
+- Multiple API key support - Automatically uses a different API key when one's quota is exhausted.
 
-```shell
-# install deps
-npm install
+# Pre-Requisites
 
-# run in development mode
-npm run dev
+- Google API key. Create a `.env` file in the root folder following the template given in `.env.example` and add the API key(s) to the file.
+- Docker and docker-compose.
+- If not using docker, the app needs Node.js, NPM and MongoDB.
 
-# run tests
-npm run test
-```
+# Instructions to Execute
 
-## How do I modify the example API and make it my own?
+- `docker-compose up` if using docker.
+If not using docker :
+- `sudo systemctl start mongodb` to start MongoDB globally.
+- `npm run dev` to start the server in development mode.
 
-There are two key files that enable you to customize and describe your API:
-1. `server/routes.js` - This references the implementation of all of your routes. Add as many routes as you like and point each route your express handler functions.
-2. `server/common/api.yaml` - This file contains your [OpenAPI spec](https://swagger.io/specification/). Describe your API here. It's recommended that you to declare any and all validation logic in this YAML. `express-no-stress-typescript`  uses [express-openapi-validator](https://github.com/cdimascio/express-openapi-validator) to automatically handle all API validation based on what you've defined in the spec.
+Make sure you have the packages installed using `npm install`.
 
-## Install Dependencies
+# Trying it out
 
-Install all package dependencies (one time operation)
+- Open `localhost:3000` to find the Interactive API Explorer. 
+- Click on the `Videos` GET API -> Try it out -> Execute.
+- Play around with the page and searchText parameters.
 
-```shell
-npm install
-```
+# Code Navigation
 
-## Run It
-#### Run in *development* mode:
-Runs the application is development mode. Should not be used in production
-
-```shell
-npm run dev
-```
-
-or debug it
-
-```shell
-npm run dev:debug
-```
-
-#### Run in *production* mode:
-
-Compiles the application and starts it in production production mode.
-
-```shell
-npm run compile
-npm start
-```
-
-## Test It
-
-Run the Mocha unit tests
-
-```shell
-npm test
-```
-
-or debug them
-
-```shell
-npm run test:debug
-```
-
-## Try It
-* Open your browser to [http://localhost:3000](http://localhost:3000)
-* Invoke the `/examples` endpoint 
-  ```shell
-  curl http://localhost:3000/api/v1/examples
-  ```
-
-
-## Debug It
-
-#### Debug the server:
-
-```
-npm run dev:debug
-```
-
-#### Debug Tests
-
-```
-npm run test:debug
-```
-
-#### Debug with VSCode
-
-Add these [contents](https://github.com/cdimascio/generator-express-no-stress/blob/next/assets/.vscode/launch.json) to your `.vscode/launch.json` file
-## Lint It
-
-View prettier linter output
-
-```
-npm run lint
-```
-
-Fix all prettier linter errors
-
-```
-npm run lint
-```
-
-## Deploy It
-
-Deploy to CloudFoundry
-
-```shell
-cf push myapp
-```
-
-
-   
+- The entry point to the server rests in `server/index.js`.
+- Available API routes can be found in `server/routes.js`.
+- `server/routes.js` is the first file an API request reaches, where it is redirected to the specific router, for example, `server/api/controllers/videos/router.js`.
+- The router then routes the request to the appropriate controller.
+- The control checks the inputs and delegates the task to a service, found in the `server/services` directory.
+- The service acts on the data, interacts with the database and returns the result to the controller, which in turn returns the response to the user.
+- Youtube API integration can be found in `server/api/services/youtube.services.js`.
