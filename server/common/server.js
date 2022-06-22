@@ -8,6 +8,8 @@ import l from './logger';
 import * as OpenApiValidator from 'express-openapi-validator';
 import errorHandler from '../api/middlewares/error.handler';
 
+import mongo from './mongo';
+
 const app = new Express();
 
 export default class ExpressServer {
@@ -50,12 +52,15 @@ export default class ExpressServer {
   listen(port = process.env.PORT) {
     const welcome = (p) => () =>
       l.info(
-        `up and running in ${
+        `Server up and running in ${
           process.env.NODE_ENV || 'development'
         } @: ${os.hostname()} on port: ${p}}`
       );
 
-    http.createServer(app).listen(port, welcome(port));
+    mongo().then(() => {
+      l.info('Database Loaded!');
+      http.createServer(app).listen(port, welcome(port));
+    });
 
     return app;
   }
