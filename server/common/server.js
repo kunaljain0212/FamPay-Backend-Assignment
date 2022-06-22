@@ -10,6 +10,9 @@ import errorHandler from '../api/middlewares/error.handler';
 
 import mongo from './mongo';
 
+import YoutubeService from '../api/services/youtube.service';
+import { TIME_DELTA } from './config';
+
 const app = new Express();
 
 export default class ExpressServer {
@@ -62,6 +65,15 @@ export default class ExpressServer {
       http.createServer(app).listen(port, welcome(port));
     });
 
+    this.pollYoutubeAPI();
+
     return app;
+  }
+
+  pollYoutubeAPI() {
+    YoutubeService.fetchLatestVideos();
+    setInterval(() => {
+      YoutubeService.fetchLatestVideos();
+    }, TIME_DELTA);
   }
 }
