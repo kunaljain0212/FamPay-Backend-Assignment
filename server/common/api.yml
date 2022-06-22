@@ -6,97 +6,31 @@ info:
 servers:
   - url: /api/v1
 tags:
-  - name: Examples
-    description: Simple example endpoints
+  - name: Videos
+    description: Endpoints to access latest youtube videos
   - name: Specification
     description: The swagger API specification
 paths:
-  /examples:
+  /videos:
     get:
       tags:
-        - Examples
-      description: Fetch all examples
+        - Videos
+      description: Fetch paginated videos
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+          description: Page number of the videos to be fetched, starting from 0
       responses:
         200:
-          description: Return the example with the specified id
+          description: Return the paginated videos
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Example'
-        4XX:
-          description: Example not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        5XX:
-          description: Example not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-    post:
-      tags:
-        - Examples
-      description: Create a new example
-      requestBody:
-        description: an example
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ExampleBody'
-        required: true
-      responses:
-        201:
-          description: Return the example with the specified id
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Example'
-        4XX:
-          description: Example not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        5XX:
-          description: Example not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-  /examples/{id}:
-    get:
-      tags:
-        - Examples
-      parameters:
-        - name: id
-          in: path
-          description: The id of the example to retrieve
-          required: true
-          schema:
-            type: integer
-      responses:
-        200:
-          description: Return the example with the specified id
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Example'
-        4XX:
-          description: Example not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        5XX:
-          description: Example not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+                  $ref: '#/components/schemas/Video'
   /spec:
     get:
       tags:
@@ -107,25 +41,24 @@ paths:
           content: {}
 components:
   schemas:
-    Example:
+      Video:
       type: object
       properties:
-        id:
-          type: integer
-          example: 3
-        name:
+        _id:
           type: string
-          example: example 3
-    Error:
-      type: object
-      additionalProperties: true
-
-    ExampleBody:
-      title: example
-      required:
-        - name
-      type: object
-      properties:
-        name:
+        title:
           type: string
-          example: no_stress
+        description:
+          type: string
+        publishedAt:
+          type: string
+        thumbnails:
+          type: object
+          properties:
+            default: 
+              type: string
+            high: 
+              type: string
+      Error:
+        type: object
+        additionalProperties: true

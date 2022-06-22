@@ -4,7 +4,6 @@ import {
   getGoogleAPIKey,
   incrementCurrentKey,
   QUERY,
-  TIME_DELTA,
 } from '../../common/config';
 import l from '../../common/logger';
 import VideoModel from '../../models/videoModel';
@@ -18,8 +17,9 @@ class YouTubeService {
 
     l.info('Youtube Loaded!');
 
-    this.publishedAfter = new Date(Date.now() - TIME_DELTA).toISOString();
-    console.log(this.publishedAfter);
+    this.publishedAfter = new Date(
+      new Date().setUTCHours(0, 0, 0, 0)
+    ).toISOString();
   }
 
   async saveVideo(video) {
@@ -66,7 +66,10 @@ class YouTubeService {
 
       // Change publishedAfter to the latest video's published time
       // to ensure videos aren't repeated.
-      if (items[0]) this.publishedAfter = items[0].publishedAt;
+      if (items[0]) {
+        this.publishedAfter = items[0].publishedAt;
+        this.saveVideos(items);
+      }
     } catch (error) {
       // Use the next API Key if the current one exceeded the quota.
       if (error.message.includes('exceeded')) {
