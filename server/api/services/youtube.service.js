@@ -22,6 +22,10 @@ class YouTubeService {
     ).toISOString();
   }
 
+  /**
+   * Saves a video to the database
+   * @param {object} video - A Video object fetched from the Youtube API
+   */
   async saveVideo(video) {
     const {
       id,
@@ -43,6 +47,10 @@ class YouTubeService {
     }
   }
 
+  /**
+   * Saves a list of videos to the database
+   * @param {Array<object>} videos - An array of videos fetched from the Youtube API
+   */
   async saveVideos(videos) {
     try {
       const promises = videos.map((video) => this.saveVideo(video));
@@ -52,6 +60,9 @@ class YouTubeService {
     }
   }
 
+  /**
+   * Polls the Youtube API to search for the latest videos
+   */
   async fetchLatestVideos() {
     try {
       const {

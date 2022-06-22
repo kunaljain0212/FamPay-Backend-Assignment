@@ -23,6 +23,7 @@ const Video = new mongoose.Schema({
   },
 });
 
+// Add text index to enable advanced search
 Video.index({ title: 'text', description: 'text' });
 
 export default mongoose.model('Video', Video);
