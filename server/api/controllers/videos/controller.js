@@ -3,9 +3,9 @@ import VideosService from '../../services/videos.service';
 export class Controller {
   async getVideos(req, res) {
     try {
-      const { page } = req.query;
+      const { page, searchText } = req.query;
 
-      const videos = await VideosService.getVideos(page ?? 0);
+      const videos = await VideosService.getVideos(page ?? 0, searchText);
 
       res.status(200).json({
         videos,

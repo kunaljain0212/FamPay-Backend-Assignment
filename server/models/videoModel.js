@@ -23,4 +23,6 @@ const Video = new mongoose.Schema({
   },
 });
 
+Video.index({ title: 'text', description: 'text' });
+
 export default mongoose.model('Video', Video);

@@ -22,6 +22,11 @@ paths:
           schema:
             type: integer
           description: Page number of the videos to be fetched, starting from 0
+        - in: query
+          name: searchText
+          schema:
+            type: string
+          description: A query string for searching through the videos
       responses:
         200:
           description: Return the paginated videos
