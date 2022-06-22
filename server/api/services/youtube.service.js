@@ -7,6 +7,7 @@ import {
   TIME_DELTA,
 } from '../../common/config';
 import l from '../../common/logger';
+import VideoModel from '../../models/videoModel';
 
 class YouTubeService {
   constructor() {
@@ -21,10 +22,38 @@ class YouTubeService {
     console.log(this.publishedAfter);
   }
 
+  async saveVideo(video) {
+    const {
+      id,
+      snippet: { title, description, publishedAt, thumbnails },
+    } = video;
+    try {
+      await VideoModel.create({
+        _id: id.videoId,
+        title,
+        description,
+        publishedAt,
+        thumbnails: {
+          default: thumbnails.default.url,
+          high: thumbnails.high.url,
+        },
+      });
+    } catch (error) {
+      l.error(`[SAVE VIDEO] : ${error}`);
+    }
+  }
+
+  async saveVideos(videos) {
+    try {
+      const promises = videos.map((video) => this.saveVideo(video));
+      await Promise.all(promises);
+    } catch (error) {
+      l.error(`[SAVE VIDEOS] : ${error}`);
+    }
+  }
+
   async fetchLatestVideos() {
     try {
-      l.info('Fetching Latest Videos');
-
       const {
         data: { items },
       } = await this.youtube.search.list({
